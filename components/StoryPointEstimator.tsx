@@ -4,14 +4,34 @@ import React, { useState } from 'react';
 import { Download } from 'lucide-react';
 import { useClient } from './useClient';
 
+// Define interfaces for TypeScript
+interface Task {
+  id: number;
+  name: string;
+  estimates: Record<string, number>;
+}
+
+interface TeamMember {
+  id: number;
+  name: string;
+}
+
+interface AnimalPoint {
+  points: number;
+  animal: string;
+  emoji: string;
+  description: string;
+  timeEstimate: string;
+}
+
 const StoryPointEstimator = () => {
   const isClient = useClient();
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskName, setNewTaskName] = useState('');
-  const [teamMembers, setTeamMembers] = useState([]);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [newMemberName, setNewMemberName] = useState('');
 
-  const animalPoints = [
+  const animalPoints: AnimalPoint[] = [
     { 
       points: 1, 
       animal: 'Ant',
@@ -77,28 +97,30 @@ const StoryPointEstimator = () => {
     }
   ];
 
-  const addTask = () => {
+  const addTask = (): void => {
     if (newTaskName.trim()) {
-      setTasks([...tasks, {
+      const newTask: Task = {
         id: Date.now(),
         name: newTaskName,
         estimates: {}
-      }]);
+      };
+      setTasks([...tasks, newTask]);
       setNewTaskName('');
     }
   };
 
-  const addTeamMember = () => {
+  const addTeamMember = (): void => {
     if (newMemberName.trim()) {
-      setTeamMembers([...teamMembers, {
+      const newMember: TeamMember = {
         id: Date.now(),
         name: newMemberName
-      }]);
+      };
+      setTeamMembers([...teamMembers, newMember]);
       setNewMemberName('');
     }
   };
 
-  const submitEstimate = (taskId, memberId, points) => {
+  const submitEstimate = (taskId: number, memberId: number, points: number): void => {
     setTasks(tasks.map(task => {
       if (task.id === taskId) {
         return {
@@ -113,13 +135,14 @@ const StoryPointEstimator = () => {
     }));
   };
 
-  const calculateAverage = (estimates) => {
-    if (Object.keys(estimates).length === 0) return 0;
-    const sum = Object.values(estimates).reduce((acc, val) => acc + val, 0);
-    return (sum / Object.keys(estimates).length).toFixed(1);
+  const calculateAverage = (estimates: Record<string, number>): string => {
+    const values = Object.values(estimates);
+    if (values.length === 0) return '0';
+    const sum = values.reduce((acc, val) => acc + val, 0);
+    return (sum / values.length).toFixed(1);
   };
 
-  const exportToExcel = () => {
+  const exportToExcel = (): void => {
     let csvContent = "Task Name,";
     
     teamMembers.forEach(member => {
