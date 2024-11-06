@@ -1,6 +1,11 @@
 "use client";
 
-import { StoryPointEstimator } from '../components/StoryPointEstimator';
+import dynamic from 'next/dynamic';
+
+const StoryPointEstimator = dynamic(
+  () => import('../components/StoryPointEstimator').then(mod => ({ default: mod.StoryPointEstimator })),
+  { ssr: false }
+);
 
 export default function Home() {
   return (

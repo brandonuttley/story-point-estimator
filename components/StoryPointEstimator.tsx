@@ -103,7 +103,7 @@ export function StoryPointEstimator() {
         name: newTaskName,
         estimates: {} as Record<number, number>
       };
-      setTasks(prevTasks => [...prevTasks, newTask]);
+      setTasks(currentTasks => [...currentTasks, newTask]);
       setNewTaskName('');
     }
   };
