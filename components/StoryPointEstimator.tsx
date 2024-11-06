@@ -1,35 +1,28 @@
-"use client";
-
-import React, { useState } from 'react';
+import React from 'react';
 import { Download } from 'lucide-react';
-import { useClient } from './useClient';
+import { Task, TeamMember, AnimalPoint } from './types';
 
-interface Task {
-  id: number;
-  name: string;
-  estimates: Record<number, number>;
+interface StoryPointEstimatorProps {
+  tasks: Task[];
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  newTaskName: string;
+  setNewTaskName: React.Dispatch<React.SetStateAction<string>>;
+  teamMembers: TeamMember[];
+  setTeamMembers: React.Dispatch<React.SetStateAction<TeamMember[]>>;
+  newMemberName: string;
+  setNewMemberName: React.Dispatch<React.SetStateAction<string>>;
 }
 
-interface TeamMember {
-  id: number;
-  name: string;
-}
-
-interface AnimalPoint {
-  points: number;
-  animal: string;
-  emoji: string;
-  description: string;
-  timeEstimate: string;
-}
-
-export function StoryPointEstimator() {
-  const isClient = useClient();
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [newTaskName, setNewTaskName] = useState('');
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
-  const [newMemberName, setNewMemberName] = useState('');
-
+export function StoryPointEstimator({
+  tasks,
+  setTasks,
+  newTaskName,
+  setNewTaskName,
+  teamMembers,
+  setTeamMembers,
+  newMemberName,
+  setNewMemberName,
+}: StoryPointEstimatorProps) {
   const animalPoints: AnimalPoint[] = [
     { 
       points: 1, 
@@ -98,12 +91,13 @@ export function StoryPointEstimator() {
 
   const addTask = (): void => {
     if (newTaskName.trim()) {
-      const newTask: Task = {
+      const newTask = {
         id: Date.now(),
         name: newTaskName,
         estimates: {} as Record<number, number>
-      };
-      setTasks(currentTasks => [...currentTasks, newTask]);
+      } satisfies Task;
+      
+      setTasks(prevTasks => [...prevTasks, newTask]);
       setNewTaskName('');
     }
   };
@@ -168,12 +162,6 @@ export function StoryPointEstimator() {
     link.click();
     document.body.removeChild(link);
   };
-
-  if (!isClient) {
-    return <div className="flex justify-center items-center min-h-screen">
-      <div className="text-lg">Loading...</div>
-    </div>;
-  }
 
   return (
     <div className="space-y-6">

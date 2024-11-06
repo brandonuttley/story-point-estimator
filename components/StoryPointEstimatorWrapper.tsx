@@ -1,25 +1,17 @@
-// app/page.tsx
-'use client';
-
+// components/StoryPointEstimatorWrapper.tsx
 import { useState } from 'react';
-import dynamic from 'next/dynamic';
-import { TeamMember } from '../components/types';
+import { StoryPointEstimator } from './StoryPointEstimator';
+import { TeamMember } from './types';
 
-const StoryPointEstimatorWrapper = dynamic(
-  () => import('../components/StoryPointEstimatorWrapper'),
-  { ssr: false }
-);
-
-export default function Home() {
+export default function StoryPointEstimatorWrapper() {
   const [tasks, setTasks] = useState([]);
   const [newTaskName, setNewTaskName] = useState('');
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [newMemberName, setNewMemberName] = useState('');
 
   return (
-    <main className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Story Point Estimation Tool</h1>
-      <StoryPointEstimatorWrapper
+    <div suppressHydrationWarning={true}>
+      <StoryPointEstimator
         tasks={tasks}
         setTasks={setTasks}
         newTaskName={newTaskName}
@@ -29,6 +21,6 @@ export default function Home() {
         newMemberName={newMemberName}
         setNewMemberName={setNewMemberName}
       />
-    </main>
+    </div>
   );
 }
