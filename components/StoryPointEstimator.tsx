@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Download } from 'lucide-react';
 import { useClient } from './useClient';
 
-// Define interfaces for TypeScript
 interface Task {
   id: number;
   name: string;
@@ -102,9 +101,9 @@ export function StoryPointEstimator() {
       const newTask: Task = {
         id: Date.now(),
         name: newTaskName,
-        estimates: {}
+        estimates: {} as Record<number, number>
       };
-      setTasks([...tasks, newTask]);
+      setTasks(prevTasks => [...prevTasks, newTask]);
       setNewTaskName('');
     }
   };
@@ -115,24 +114,26 @@ export function StoryPointEstimator() {
         id: Date.now(),
         name: newMemberName
       };
-      setTeamMembers([...teamMembers, newMember]);
+      setTeamMembers(prevMembers => [...prevMembers, newMember]);
       setNewMemberName('');
     }
   };
 
   const submitEstimate = (taskId: number, memberId: number, points: number): void => {
-    setTasks(tasks.map(task => {
-      if (task.id === taskId) {
-        return {
-          ...task,
-          estimates: {
-            ...task.estimates,
-            [memberId]: points
-          }
-        };
-      }
-      return task;
-    }));
+    setTasks(prevTasks => 
+      prevTasks.map(task => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            estimates: {
+              ...task.estimates,
+              [memberId]: points
+            }
+          };
+        }
+        return task;
+      })
+    );
   };
 
   const calculateAverage = (estimates: Record<number, number>): string => {
