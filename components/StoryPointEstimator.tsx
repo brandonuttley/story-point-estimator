@@ -8,7 +8,7 @@ import { useClient } from './useClient';
 interface Task {
   id: number;
   name: string;
-  estimates: Record<string, number>;
+  estimates: Record<number, number>;
 }
 
 interface TeamMember {
@@ -24,7 +24,7 @@ interface AnimalPoint {
   timeEstimate: string;
 }
 
-const StoryPointEstimator = () => {
+export function StoryPointEstimator() {
   const isClient = useClient();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskName, setNewTaskName] = useState('');
@@ -135,7 +135,7 @@ const StoryPointEstimator = () => {
     }));
   };
 
-  const calculateAverage = (estimates: Record<string, number>): string => {
+  const calculateAverage = (estimates: Record<number, number>): string => {
     const values = Object.values(estimates);
     if (values.length === 0) return '0';
     const sum = values.reduce((acc, val) => acc + val, 0);
@@ -336,6 +336,4 @@ const StoryPointEstimator = () => {
       </div>
     </div>
   );
-};
-
-export default StoryPointEstimator;
+}
